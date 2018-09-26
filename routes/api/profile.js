@@ -5,6 +5,8 @@ const passport = require("passport");
 const validateProfileInput = require("../../validations/profile");
 const validateExperienceInput = require("../../validations/experience");
 const validateEducationInput = require("../../validations/education");
+const request = require("request");
+const keys = require("../../config/keys");
 
 //Load Profile Model
 const User = require("../../models/User");
@@ -239,15 +241,16 @@ router.delete(
   (req, res) => {
     Profile.findOne({ user: req.user.id })
       .then(profile => {
-        if (profile) {
-          // Get remove index
-          const removeIndex = profile.experience
-            .map(item => item.id)
-            .indexOf(req.params.exp_id);
-          //Splice out of array
-          profile.experience.splice(removeIndex, 1);
-          profile.save().then(profile => res.json(profile));
-        }
+        // Get remove index
+        const removeIndex = profile.experience
+          .map(item => item.id)
+          .indexOf(req.params.exp_id);
+
+        // Splice out of array
+        profile.experience.splice(removeIndex, 1);
+
+        // Save
+        profile.save().then(profile => res.json(profile));
       })
       .catch(err => res.status(404).json(err));
   }
@@ -292,5 +295,29 @@ router.delete(
       .catch(err => res.status(404).json(err));
   }
 );
+
+// @route       GET api/profile/github/:username/:count/:sort
+// @desc        Get github data from github api
+// @access      Public
+router.get("/github/:username/:count/:sort", (req, res) => {
+  username = req.params.username;
+  clientId = keys.clientId;
+  clientSecret = keys.clientSecret;
+  count = req.params.count;
+  sort = req.params.sort;
+  const options = {
+    url: `https://api.github.com/users/${username}/repos?per_page=${count}&sort=${sort}&client_id=${clientId}&client_secret=${clientSecret}`,
+    headers: {
+      "User-Agent": "request"
+    }
+  };
+  function callback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      const info = JSON.parse(body);
+      res.json(info);
+    }
+  }
+  request(options, callback);
+});
 
 module.exports = router;

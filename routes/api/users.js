@@ -17,7 +17,7 @@ const validateLoginInput = require("../../validations/login");
 //@access Public
 router.get("/test", (req, res) => res.json({ msg: "User works" }));
 
-//@route  GET api/users/register
+//@route  POST api/users/register
 //@desc   Register user
 //@access Public
 router.post("/register", (req, res) => {
@@ -77,7 +77,7 @@ router.post("/login", (req, res) => {
       bcrypt.compare(password, user.password).then(isMatch => {
         if (isMatch) {
           //User Matched
-          const payload = { id: user.id, name: user.name, email };
+          const payload = { id: user.id, name: user.name, avatar: user.avatar };
 
           //Sign Token
           jwt.sign(
