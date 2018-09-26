@@ -15,14 +15,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // DB Config
-const db = require("./config/keys").mongoURI;
+const dbURI = require("./config/keys").mongoURI;
 
 //Connect to mongo db
-
-mongoose
-  .connect(encodeURI(db))
-  .then(() => console.log("Mongo DB connected"))
-  .catch(error => console.log("Error connecting mongo db", error));
+mongoose.connect(
+  dbURI,
+  { useNewUrlParser: true }
+);
+const db = mongoose.connection;
+db.on("error", error => {
+  //console.log("MongoDB error :", error);
+  logger.log("error", "Mongoose connection error: " + error);
+});
+db.once("open", function() {
+  console.log("Mongoose connected");
+  // we're connected!
+});
+// mongoose
+//   .connect(encodeURI(db))
+//   .then(() => console.log("Mongo DB connected"))
+//   .catch(error => console.log("Error connecting mongo db", error));
 
 // Passport middleware
 app.use(passport.initialize());
