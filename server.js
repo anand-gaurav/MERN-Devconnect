@@ -24,8 +24,8 @@ mongoose.connect(
 );
 const db = mongoose.connection;
 db.on("error", error => {
-  //console.log("MongoDB error :", error);
-  logger.log("error", "Mongoose connection error: " + error);
+  console.log("MongoDB error :", error);
+  //logger.log("error", "Mongoose connection error: " + error);
 });
 db.once("open", function() {
   console.log("Mongoose connected");
