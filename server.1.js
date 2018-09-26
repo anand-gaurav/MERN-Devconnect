@@ -1,20 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const bodyparser = require("body-parser");
 const passport = require("passport");
 const path = require("path");
 
-const users = require("./routes/api/users");
-const profile = require("./routes/api/profile");
 const posts = require("./routes/api/posts");
+const profile = require("./routes/api/profile");
+const users = require("./routes/api/users");
 
 const app = express();
 
-// Body parser middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+//Body parser middleware
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.json());
 
-// DB Config
 const db = require("./config/keys").mongoURI;
 
 //Connect to mongo db
@@ -27,17 +26,14 @@ mongoose
   .then(() => console.log("Mongo DB connected"))
   .catch(error => console.log("Error connecting mongo db", error));
 
-// Passport middleware
+//Passport middleware
 app.use(passport.initialize());
-
-// Passport Config
+//Passport config
 require("./config/passportConfig")(passport);
 
-// Use Routes
-app.use("/api/users", users);
-app.use("/api/profile", profile);
 app.use("/api/posts", posts);
-
+app.use("/api/profile", profile);
+app.use("/api/users", users);
 // Server static assets if in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder
