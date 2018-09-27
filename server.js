@@ -16,13 +16,14 @@ app.use(bodyParser.json());
 
 // DB Config
 const dbURI = require("./config/keys").mongoURI;
+console.log("dbURI::" + dbURI + "::");
 mongoose.connect(
   encodeURI(dbURI),
   { useNewUrlParser: true }
 );
 const db = mongoose.connection;
 db.on("error", error => {
-  console.log("MongoDB error :", error);
+  console.error("MongoDB error :", error);
 });
 db.once("open", function() {
   console.log("Mongoose connected");
