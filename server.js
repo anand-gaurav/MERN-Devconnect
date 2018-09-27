@@ -16,8 +16,6 @@ app.use(bodyParser.json());
 
 // DB Config
 const dbURI = require("./config/keys").mongoURI;
-
-//Connect to mongo db
 mongoose.connect(
   dbURI,
   { useNewUrlParser: true }
@@ -25,11 +23,9 @@ mongoose.connect(
 const db = mongoose.connection;
 db.on("error", error => {
   console.log("MongoDB error :", error);
-  //logger.log("error", "Mongoose connection error: " + error);
 });
 db.once("open", function() {
   console.log("Mongoose connected");
-  // we're connected!
 });
 // mongoose
 //   .connect(encodeURI(db))
