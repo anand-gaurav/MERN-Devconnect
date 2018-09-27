@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 // DB Config
 const dbURI = require("./config/keys").mongoURI;
 mongoose.connect(
-  dbURI,
+  encodeURI(dbURI),
   { useNewUrlParser: true }
 );
 const db = mongoose.connection;
